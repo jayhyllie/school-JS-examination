@@ -54,7 +54,7 @@ function renderPlanetsToModal(planets) {
         modalContainer.classList.remove('active');
         clearActiveClass();
     })
-}
+};
 
 // SÖKFUNKTION
 searchInput.addEventListener("keydown", function (e) {
@@ -134,5 +134,5 @@ infoButtons.forEach((btn) => {
         let currentTarget = e.target;
         infoButtons.forEach(p => p.classList.remove('active'));
         currentTarget.classList.toggle("active");
-    });
+    })
 });
