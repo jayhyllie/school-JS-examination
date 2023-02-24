@@ -1,3 +1,4 @@
+const MASTER_URL = 'https://majazocom.github.io/Data/solaris.json';
 let planetsContainer = document.querySelectorAll('.planet');
 let infoButtons = document.querySelectorAll('.btn');
 let searchInput = document.querySelector('#search');
@@ -11,7 +12,7 @@ let planetsArray = [];
 
 async function getPlanetInfo() {
     try {
-        let resp = await fetch('https://majazocom.github.io/Data/solaris.json');
+        let resp = await fetch(MASTER_URL);
         planetsArray = await resp.json();
     }
     catch (error) {
@@ -59,7 +60,7 @@ function renderPlanetsToModal(planets) {
 // SÖKFUNKTION
 searchInput.addEventListener("keydown", function (e) {
     // Körs när man klickar på ENTER
-    if (e.key === 'ENTER' && searchInput.value != '') {
+    if (e.key === 'Enter' && searchInput.value != '') {
         e.preventDefault();
         const searchValue = searchInput.value;
         let matchedPlanet = [];
@@ -75,7 +76,7 @@ searchInput.addEventListener("keydown", function (e) {
             return currentValue.name.toLowerCase().includes(searchValue.toLowerCase());
         }
         if (!planetsArray.some(showErrorMessage)) {
-            formError.innerHTML = searchValue + ' kunde inte hittas';
+            formError.innerHTML = 'Planeten ' + searchValue + ' kunde inte hittas';
             formError.ariaHidden = 'false';
         }
     }
@@ -106,8 +107,8 @@ prevBtn.addEventListener('click', () => {
     let previous = document.querySelector('.planet.active').previousSibling;
     if (previous.nodeName === '#text') {
         previous.previousSibling.click();
-    } else { 
-        previous.previousSibling.click(); 
+    } else {
+        previous.previousSibling.click();
     }
 })
 
@@ -116,8 +117,8 @@ nextBtn.addEventListener('click', () => {
     let next = document.querySelector('.planet.active').nextSibling;
     if (next.nodeName === '#text') {
         next.nextSibling.click();
-    } else { 
-        next.nextSibling.click(); 
+    } else {
+        next.nextSibling.click();
     }
 })
 
@@ -136,3 +137,46 @@ infoButtons.forEach((btn) => {
         currentTarget.classList.toggle("active");
     })
 });
+
+function showCaseInfo() {
+    const nameBtn = document.getElementById("name");
+    const distanceBtn = document.getElementById("distance");
+    const sizeBtn = document.getElementById("size");
+
+    // Printar ut namn på alla planeter
+    nameBtn.addEventListener("click", () => {
+        fetch(MASTER_URL)
+            .then(response => response.json())
+            .then(data => {
+                planetsContainer.forEach((planetDiv, index) => {
+                    planetDiv.dataset.attribute = data[index].name;
+                });
+            })
+            .catch(error => console.log(error));
+    });
+
+    // Printar ut distans för alla planeter
+    distanceBtn.addEventListener("click", () => {
+        fetch(MASTER_URL)
+            .then(response => response.json())
+            .then(data => {
+                planetsContainer.forEach((planetDiv, index) => {
+                    planetDiv.dataset.attribute = data[index].distance;
+                });
+            })
+            .catch(error => console.log(error));
+    });
+
+    // Printar ut storlet för alla planeter
+    sizeBtn.addEventListener("click", () => {
+        fetch(MASTER_URL)
+            .then(response => response.json())
+            .then(data => {
+                planetsContainer.forEach((planetDiv, index) => {
+                    planetDiv.dataset.attribute = data[index].circumference;
+                });
+            })
+            .catch(error => console.log(error));
+    });
+}
+showCaseInfo();
