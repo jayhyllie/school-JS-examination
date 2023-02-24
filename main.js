@@ -1,8 +1,11 @@
-let planets = document.querySelectorAll('.planet');
+let planetsContainer = document.querySelectorAll('.planet');
 let infoButtons = document.querySelectorAll('.btn');
 let searchInput = document.querySelector('#search');
+let formError = document.querySelector('.form--error');
 let modalContainer = document.querySelector('.modal');
 let pagination = document.querySelector('.modal__pagination');
+let prevBtn = document.querySelector('.pagination--prev');
+let nextBtn = document.querySelector('.pagination--next');
 let closeBtn = document.querySelector('.modal__close');
 let planetsArray = [];
 
@@ -19,7 +22,9 @@ getPlanetInfo();
 
 function renderPlanetsToModal(planets) {
     modalContainer.innerHTML = '';
+    clearActiveClass();
     planets.forEach(planet => {
+        document.querySelector(`#${planet.name}`).classList.add('active');
         let planetEl = document.createElement('article');
         planetEl.classList.add('chosen__planet')
         planetEl.innerHTML = `
@@ -33,23 +38,28 @@ function renderPlanetsToModal(planets) {
         </section>
         <section class="planet--moons">
             <h3 class="moons-headline">Moons</h3>
-            <p>${planet.moons}</p>
+            <div class="moons"></div>
         </section>
         `;
         modalContainer.appendChild(planetEl);
         modalContainer.appendChild(pagination);
         modalContainer.appendChild(closeBtn);
         modalContainer.classList.add('active');
+
+        planet.moons.forEach(moon => {
+            document.querySelector(".moons").innerHTML += `<p>${moon}</p>`;
+        })
     })
     closeBtn.addEventListener('click', () => {
         modalContainer.classList.remove('active');
+        clearActiveClass();
     })
 }
 
-// SÖKFUNCTION
+// SÖKFUNKTION
 searchInput.addEventListener("keydown", function (e) {
     // Körs när man klickar på ENTER
-    if (e.key === "Enter") {
+    if (e.key === 'ENTER' && searchInput.value != '') {
         e.preventDefault();
         const searchValue = searchInput.value;
         let matchedPlanet = [];
@@ -60,11 +70,25 @@ searchInput.addEventListener("keydown", function (e) {
             }
         })
         renderPlanetsToModal(matchedPlanet);
+
+        let showErrorMessage = function (currentValue) {
+            return currentValue.name.toLowerCase().includes(searchValue.toLowerCase());
+        }
+        if (!planetsArray.some(showErrorMessage)) {
+            formError.innerHTML = searchValue + ' kunde inte hittas';
+            formError.ariaHidden = 'false';
+        }
     }
 });
 
+searchInput.addEventListener('input', () => {
+    if (searchInput.value == '') {
+        formError.ariaHidden = 'true';
+    }
+})
+
 // ÖPPNA POPUP PÅ VARSIN PLANET
-planets.forEach(planet => {
+planetsContainer.forEach(planet => {
     planet.addEventListener('click', (e) => {
         let planetEl = e.target.id;
         let clickedPlanet = [];
@@ -76,6 +100,33 @@ planets.forEach(planet => {
         renderPlanetsToModal(clickedPlanet);
     })
 })
+
+// Föregående planet
+prevBtn.addEventListener('click', () => {
+    let previous = document.querySelector('.planet.active').previousSibling;
+    if (previous.nodeName === '#text') {
+        previous.previousSibling.click();
+    } else { 
+        previous.previousSibling.click(); 
+    }
+})
+
+// nästa planet
+nextBtn.addEventListener('click', () => {
+    let next = document.querySelector('.planet.active').nextSibling;
+    if (next.nodeName === '#text') {
+        next.nextSibling.click();
+    } else { 
+        next.nextSibling.click(); 
+    }
+})
+
+// rensa aktiva klasser 
+function clearActiveClass() {
+    planetsContainer.forEach(planet => {
+        planet.classList.remove('active');
+    })
+}
 
 // Header infoknappar
 infoButtons.forEach((btn) => {

@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solaris - Examination</title>
     <link rel="stylesheet" href="style.css">
-    <script defer src="main.js"></script>
 </head>
 
 <body>
@@ -16,10 +15,11 @@
             <section class="buttons">
                 <button class="btn">Name</button>
                 <button class="btn">Distance</button>
-                <button class="btn">Moons</button>
+                <button class="btn">Size</button>
             </section>
             <form action="">
                 <input type="text" id="search" placeholder="Sök efter planet...">
+                <span class="form--error" aria-hidden="true"></span>
             </form>
         </header>
         <main class="planets flex">
@@ -42,6 +42,8 @@
         </section>
         <div class="modal__close">X</div>
     </div>
+
+    <script src="main.js"></script>
 </body>
 
 </html>
